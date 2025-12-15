@@ -1,16 +1,157 @@
-# Yandex Disk Go SDK
-
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/e68c499e-7bc7-4dd1-bb91-319ffa138ab4" alt="Yandex Disk Go SDK" style="max-width: 100%; height: auto;">
+
+# 🚀 Yandex Disk Go SDK
+
+<img src="https://github.com/user-attachments/assets/e68c499e-7bc7-4dd1-bb91-319ffa138ab4" alt="Yandex Disk Go SDK" width="600">
+
+### Powerful, modern, and easy-to-use Go SDK for Yandex.Disk
+
+[![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8?style=for-the-badge&logo=go)](https://golang.org)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/tigusigalpa/yandex-disk-go?style=for-the-badge)](https://goreportcard.com/report/github.com/tigusigalpa/yandex-disk-go)
+[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=for-the-badge&logo=go)](https://pkg.go.dev/github.com/tigusigalpa/yandex-disk-go)
+
+[![Tests](https://img.shields.io/github/actions/workflow/status/tigusigalpa/yandex-disk-go/test.yml?branch=main&label=Tests&style=for-the-badge)](https://github.com/tigusigalpa/yandex-disk-go/actions)
+[![Coverage](https://img.shields.io/codecov/c/github/tigusigalpa/yandex-disk-go?style=for-the-badge&logo=codecov)](https://codecov.io/gh/tigusigalpa/yandex-disk-go)
+[![Yandex Disk API](https://img.shields.io/badge/API-Yandex%20Disk-FFCC00?style=for-the-badge&logo=yandex)](https://yandex.ru/dev/disk-api/doc/ru/)
+
+**🌐 Language:** [Русский](README.md) | [English](#)
+
+---
+
 </div>
 
-[![Go Version](https://img.shields.io/badge/Go-1.21+-blue.svg)](https://golang.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Yandex Disk API](https://img.shields.io/badge/API-Yandex%20Disk%20API-orange.svg)](https://yandex.ru/dev/disk-api/doc/ru/)
+## ✨ Features
 
-**🌐 Language:** [Русский](README.md) | English
+<table>
+<tr>
+<td width="50%">
 
-A comprehensive Go SDK for integration with [Yandex Disk API](https://yandex.ru/dev/disk-api/doc/ru/). This library provides a clean, idiomatic Go interface for managing files and folders on Yandex Disk with full coverage of the official API.
+### 🎯 Complete API Coverage
+- ✅ **26/26 methods** implemented
+- 📁 File and folder management
+- 🔗 Public links and sharing
+- 🗑️ Trash management
+- 👥 Admin functions
+- 🔄 Async operations
+
+</td>
+<td width="50%">
+
+### 💎 Code Quality
+- 🧪 Full test coverage
+- 📖 Comprehensive documentation
+- 🎨 Idiomatic Go code
+- ⚡ High performance
+- 🛡️ Type safety
+- 🔍 Detailed error handling
+
+</td>
+</tr>
+</table>
+
+## 🎬 Quick Start
+
+### Installation
+
+```bash
+go get github.com/tigusigalpa/yandex-disk-go
+```
+
+### Your First Program
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+    
+    yandexdisk "github.com/tigusigalpa/yandex-disk-go"
+)
+
+func main() {
+    // Create client
+    client := yandexdisk.NewClient("your_oauth_token")
+    
+    // Get disk info
+    diskInfo, err := client.GetCapacity()
+    if err != nil {
+        log.Fatal(err)
+    }
+    
+    // Display stats
+    fmt.Printf("💾 Used: %.2f GB of %.2f GB\n", 
+        float64(diskInfo.UsedSpace)/1e9,
+        float64(diskInfo.TotalSpace)/1e9)
+    fmt.Printf("📊 Usage: %.1f%%\n", diskInfo.GetUsagePercentage())
+    
+    // Upload file
+    result, _ := client.UploadFile("local.txt", "/disk/remote.txt", true)
+    if result.Success {
+        fmt.Println("✅ File uploaded successfully!")
+    }
+}
+```
+
+## 🎨 Capabilities
+
+### 📤 Upload and Download Files
+```go
+// Upload file
+result, err := client.UploadFile("photo.jpg", "/disk/photos/photo.jpg", true)
+
+// Download file
+err = client.DownloadFile("/disk/document.pdf", "./local/document.pdf")
+
+// Upload from internet
+op, err := client.UploadFromURL("https://example.com/file.zip", "/disk/file.zip", false)
+```
+
+### 🔗 Public Links
+```go
+// Publish file and get link
+resource, err := client.Publish("/disk/presentation.pptx")
+fmt.Printf("Share: %s\n", resource.PublicURL)
+
+// Download someone's public file
+err = client.DownloadPublicResource("https://yadi.sk/d/...", "./downloaded.pdf", nil)
+
+// Save public file to your disk
+resource, err = client.SavePublicResource("https://yadi.sk/d/...", nil, stringPtr("/disk/saved/"))
+```
+
+### 📊 Space Management
+```go
+// Get disk statistics
+diskInfo, err := client.GetCapacity()
+fmt.Printf("📦 Free: %.2f GB\n", float64(diskInfo.GetFreeSpace())/1e9)
+fmt.Printf("🗑️ In trash: %.2f MB\n", float64(diskInfo.TrashSize)/1e6)
+
+// Clear trash
+err = client.ClearTrash(nil)
+```
+
+### 🔍 Search and Filtering
+```go
+// Get all files
+files, err := client.GetAllFiles(100, 0)
+
+// Recently uploaded
+recent, err := client.GetRecentUploads(20, 0)
+
+// Published files
+published, err := client.GetRecentPublished(10, 0)
+```
+
+### 🏢 For Organizations
+```go
+// Admin functions for managing user resources
+resources, err := client.GetPublicResourcesOwnedByUser("user-id", "org-id", 20, 0)
+err = client.UnpublishUserResource("public-key", "user-id", "org-id")
+```
+
+---
 
 ## 📋 API Reference
 
@@ -46,11 +187,20 @@ A comprehensive Go SDK for integration with [Yandex Disk API](https://yandex.ru/
 | `GetPublicResourcesAccessedByUser()` | `GET /public/resources/admin/accessible-resources` | [Accessible Resources](https://yandex.ru/dev/disk-api/doc/ru/reference/public-accessed-by-user)     | Admin: resources accessible by user           |
 | `UnpublishUserResource()`            | `PUT /public/resources/admin/unpublish`            | [Admin Unpublish](https://yandex.ru/dev/disk-api/doc/ru/reference/unpublish-admin-phash)            | Admin: unpublish resource                     |
 
-## 🚀 Installation
+## 📦 Installation
 
 ```bash
 go get github.com/tigusigalpa/yandex-disk-go
 ```
+
+<details>
+<summary>📚 Requirements</summary>
+
+- Go 1.21 or higher
+- Active Yandex account
+- OAuth token for API access
+
+</details>
 
 ## 🔐 Getting OAuth Token
 
@@ -128,9 +278,118 @@ func main() {
 }
 ```
 
-## 📖 Usage Examples
+## 💡 Usage Examples
 
-See [README.md](README.md) for detailed usage examples in Russian, or refer to the test files for code examples.
+> 💡 **Tip**: All examples can be found in the [`examples/`](examples/) folder
+
+### 📊 Disk Information
+
+```go
+diskInfo, err := client.GetCapacity()
+if err != nil {
+	log.Fatal(err)
+}
+
+fmt.Printf("Used: %d bytes\n", diskInfo.UsedSpace)
+fmt.Printf("Total: %d bytes\n", diskInfo.TotalSpace)
+fmt.Printf("Free: %d bytes\n", diskInfo.GetFreeSpace())
+fmt.Printf("Usage: %.2f%%\n", diskInfo.GetUsagePercentage())
+fmt.Printf("Trash: %d bytes\n", diskInfo.TrashSize)
+fmt.Printf("Paid: %v\n", diskInfo.IsPaid)
+```
+
+### 📁 File Operations
+
+<details>
+<summary>📤 Upload File</summary>
+
+```go
+result, err := client.UploadFile(
+	"/local/path/file.txt",
+	"/disk/MyFolder/file.txt",
+	true, // overwrite existing file
+)
+if err != nil {
+	log.Fatal(err)
+}
+
+fmt.Printf("Status: %d\n", result.Status)
+fmt.Printf("Success: %v\n", result.Success)
+```
+
+</details>
+
+<details>
+<summary>📥 Download File</summary>
+
+```go
+err := client.DownloadFile(
+	"/disk/MyFile.txt",
+	"/local/path/downloaded.txt",
+)
+if err != nil {
+	log.Fatal(err)
+}
+
+fmt.Println("Download successful")
+```
+
+</details>
+
+<details>
+<summary>📋 Copy File</summary>
+
+```go
+resource, err := client.Copy(
+	"/disk/original.txt",
+	"/disk/copy.txt",
+	true, // overwrite if exists
+)
+if err != nil {
+	log.Fatal(err)
+}
+
+fmt.Printf("Copied to: %s\n", resource.Path)
+```
+
+</details>
+
+<details>
+<summary>🚚 Move File</summary>
+
+```go
+resource, err := client.Move(
+	"/disk/old-location/file.txt",
+	"/disk/new-location/file.txt",
+	true, // overwrite if exists
+)
+if err != nil {
+	log.Fatal(err)
+}
+
+fmt.Printf("Moved to: %s\n", resource.Path)
+```
+
+</details>
+
+<details>
+<summary>🗑️ Delete File</summary>
+
+```go
+err := client.Delete(
+	"/disk/file.txt",
+	true, // permanent deletion (false = to trash)
+)
+if err != nil {
+	log.Fatal(err)
+}
+
+fmt.Println("Deleted")
+```
+
+</details>
+
+For more examples, see the [Russian README](README.md) or check the [`examples/`](examples/) directory.
 
 ## 🔧 Error Handling
 
@@ -151,30 +410,72 @@ if err != nil {
 
 ## 📊 API Coverage
 
-| Category              | Implemented | Total | Percent  |
-|-----------------------|-------------|-------|----------|
-| Disk Information      | ✅ 1         | 1     | 100%     |
-| File Operations       | ✅ 8         | 8     | 100%     |
-| Public Resources      | ✅ 8         | 8     | 100%     |
-| Trash Management      | ✅ 3         | 3     | 100%     |
-| Metadata              | ✅ 2         | 2     | 100%     |
-| Admin Methods         | ✅ 3         | 3     | 100%     |
-| Operations            | ✅ 1         | 1     | 100%     |
-| **Total**             | ✅ 26        | 26    | **100%** |
+<div align="center">
+
+### 🎯 100% Official API Coverage
+
+</div>
+
+| Category              | Implemented | Total | Percent  | Status |
+|-----------------------|-------------|-------|----------|--------|
+| 💾 Disk Information      | 1         | 1     | 100%     | ✅ |
+| 📁 File Operations       | 8         | 8     | 100%     | ✅ |
+| 🔗 Public Resources      | 8         | 8     | 100%     | ✅ |
+| 🗑️ Trash Management      | 3         | 3     | 100%     | ✅ |
+| 🏷️ Metadata              | 2         | 2     | 100%     | ✅ |
+| 👥 Admin Methods         | 3         | 3     | 100%     | ✅ |
+| ⚙️ Operations            | 1         | 1     | 100%     | ✅ |
+| **🎉 Total**             | **26**        | **26**    | **100%** | **✅** |
+
+<div align="center">
+
+**All Yandex Disk API methods are implemented and tested!**
+
+</div>
 
 ## 🤝 Contributing
 
-Contributions are welcome! Feel free to submit a Pull Request.
+<div align="center">
+
+### We welcome your contributions! 🎉
+
+</div>
+
+Contributions are welcome! Here's how you can help:
+
+- 🐛 **Found a bug?** [Create an issue](https://github.com/tigusigalpa/yandex-disk-go/issues/new)
+- 💡 **Have an idea?** [Suggest an improvement](https://github.com/tigusigalpa/yandex-disk-go/issues/new)
+- 🔧 **Want to help?** [Submit a Pull Request](https://github.com/tigusigalpa/yandex-disk-go/pulls)
+- 📖 **Improve documentation** - any help is appreciated!
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## 📄 License
 
 This package is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## 🔗 Links
+## 🔗 Useful Links
 
-- [Official Yandex Disk API Documentation](https://yandex.ru/dev/disk-api/doc/ru/)
-- [OAuth Documentation](https://yandex.ru/dev/id/doc/ru/)
+<table>
+<tr>
+<td>
+
+### 📚 Documentation
+- [Yandex Disk API](https://yandex.ru/dev/disk-api/doc/ru/)
+- [OAuth Guide](https://yandex.ru/dev/id/doc/ru/)
+- [GoDoc](https://pkg.go.dev/github.com/tigusigalpa/yandex-disk-go)
+
+</td>
+<td>
+
+### 🛠️ Development
 - [GitHub Repository](https://github.com/tigusigalpa/yandex-disk-go)
+- [Issue Tracker](https://github.com/tigusigalpa/yandex-disk-go/issues)
+- [Changelog](https://github.com/tigusigalpa/yandex-disk-go/releases)
+
+</td>
+</tr>
+</table>
 
 ## 📞 Support
 
@@ -186,4 +487,18 @@ For issues, questions, or contributions:
 
 ---
 
+<div align="center">
+
+### ⭐ Like the project?
+
+**Give it a star on GitHub!**
+
+[![GitHub stars](https://img.shields.io/github/stars/tigusigalpa/yandex-disk-go?style=social)](https://github.com/tigusigalpa/yandex-disk-go/stargazers)
+
+---
+
 **Made with ❤️ for the Go community**
+
+*Author: [Igor Sazonov](https://github.com/tigusigalpa) | License: MIT*
+
+</div>
