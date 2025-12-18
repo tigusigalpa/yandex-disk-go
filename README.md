@@ -15,7 +15,7 @@
 [![Coverage](https://img.shields.io/codecov/c/github/tigusigalpa/yandex-disk-go?style=for-the-badge&logo=codecov)](https://codecov.io/gh/tigusigalpa/yandex-disk-go)
 [![Yandex Disk API](https://img.shields.io/badge/API-Yandex%20Disk-FFCC00?style=for-the-badge&logo=yandex)](https://yandex.ru/dev/disk-api/doc/ru/)
 
-**🌐 Язык:** [Русский](#) | [English](README-en.md)
+**🌐 Language:** Русский | [English](README-en.md)
 
 ---
 
