@@ -2,7 +2,7 @@
 
 # 🚀 Yandex Disk Go SDK
 
-<img src="https://github.com/user-attachments/assets/192f1442-d23f-4edb-b389-8a8dbc1fa4fd" alt="Yandex Disk Go SDK" width="600">
+![Yandex Disk Go SDK](https://github.com/user-attachments/assets/192f1442-d23f-4edb-b389-8a8dbc1fa4fd)
 
 ### Powerful, modern, and easy-to-use Go SDK for Yandex.Disk
 
